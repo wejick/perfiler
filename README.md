@@ -6,22 +6,36 @@ Package to do profiling in perl, it takes how long a scope takes time to execute
 ## How To use (This is from test.pl)
 ```perl
 #create the profiler instance here
-my $profiler = new Perfiler;
+use Perfiler;
+use strict;
 
-{
-  # this will measure time taken until out of scope
+  my $profiler = new Perfiler;
+  
+sub test {
   my $me = $profiler->start_scope("test 1");
   {
     my $you = $profiler->start_scope("test 2");
     {
       my $bro = $profiler->start_scope("test 3");
+      my $a = 'a';
     }
     {
       my $store = $profiler->start_scope("test 4");
+      my $a = 'a';
+    }
+    {
+      my $store = $profiler->start_scope("test 5");
+      my $a = 'a';
     }
   }
+  my $a = 'a';
 }
-print $profiler->get_json;
+
+sub main {
+  test;
+
+  print $profiler->get_json;
+}
 ```
 output :
 ```javascript
@@ -31,3 +45,6 @@ output :
 1. Output to json - Done
 2. Create visualizer
 3. Create easier to use class wrapper (interface) - Done
+
+## Caveat :
+I found interesting here that when the scope is empty (except the profiler), the perl global destroying order was messy and it messed up the profiling result.
