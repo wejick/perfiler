@@ -1,13 +1,15 @@
 # Perfiler
 ## Simple profiler for perl
 
-Package to do profiling in perl, it takes not how long your function call is. 
+Package to do profiling in perl, it takes how long a scope takes time to execute.
 
 ## How To use (This is from test.pl)
 ```perl
+#create the profiler instance here
 my $profiler = new Perfiler;
 
 {
+  # this will measure time taken until out of scope
   my $me = $profiler->start_scope("test 1");
   {
     my $you = $profiler->start_scope("test 2");

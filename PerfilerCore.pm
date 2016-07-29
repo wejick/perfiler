@@ -2,8 +2,8 @@
 package PerfilerCore;
 
 use strict;
-use Time::HiRes qw(gettimeofday tv_interval usleep nanosleep ualarm);
-use Data::Dumper;
+use Time::HiRes qw(gettimeofday tv_interval );
+use POSIX qw/strftime/;
 
 sub new {
 	my ($class, $name, $handler) = @_;	
@@ -22,6 +22,7 @@ sub new {
 DESTROY {
 	my ($self) = @_;
 	my $elapse_ms = tv_interval($self->{timer})*1000;
+	
 	my %data = (
 		name => $self->{name},
 		elapse_ms => $elapse_ms,
