@@ -1,7 +1,8 @@
 #!/usr/bin/perl
 package main;
 
-use perfiler;
+use PerfilerCore;
+use JSON;
 use Data::Dumper;
 
 my %perfilerHandler = (
@@ -10,9 +11,11 @@ my %perfilerHandler = (
 );
 
 {
-	my $profiler = new perfiler("Testing",\%perfilerHandler);
+	my $profiler = new PerfilerCore("Testing",\%perfilerHandler);
 	{
-		my $profiler = new perfiler("Testing",\%perfilerHandler);
+		my $profiler = new PerfilerCore("Testing",\%perfilerHandler);
 	}
 }
 print Dumper($perfilerHandler{data});
+my $j = new JSON;
+print encode_json($perfilerHandler{data});

@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-package perfiler;
+package PerfilerCore;
 
 use strict;
 use Time::HiRes qw(gettimeofday tv_interval usleep nanosleep ualarm);
@@ -16,7 +16,6 @@ sub new {
 	$self->{handler} = $handler;
 	$self->{timer} = [gettimeofday()];
 	$self->{level} = $self->{handler}->{level}++; #increament the level
-	
 	return $self;
 }
 
@@ -33,7 +32,6 @@ DESTROY {
 	my $pos = scalar @{$self->{handler}->{data}};
 
 	$self->{handler}->{data}[$pos] = \%data;
-	
 	$self->{handler}->{level}--; #decreament the level
 }
 
