@@ -2,8 +2,6 @@
 package main;
 
 use Perfiler;
-use Data::Dumper;
-
 
 my $profiler = new Perfiler;
 

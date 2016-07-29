@@ -5,45 +5,27 @@ Package to do profiling in perl, it takes not how long your function call is.
 
 ## How To use (This is from test.pl)
 ```perl
-use perfiler;
-
-my %perfilerHandler = (
-	level => 0,
-	data => []
-);
+my $profiler = new Perfiler;
 
 {
-	my $profiler = new perfiler("Testing",\%perfilerHandler);
-	{
-		my $profiler = new perfiler("Testing",\%perfilerHandler);
-	}
+  my $me = $profiler->start_scope("test 1");
+  {
+    my $you = $profiler->start_scope("test 2");
+    {
+      my $bro = $profiler->start_scope("test 3");
+    }
+    {
+      my $store = $profiler->start_scope("test 4");
+    }
+  }
 }
-print Dumper($perfilerHandler{data});
+print $profiler->get_json;
 ```
 output :
-```perl
-$VAR1 = [
-          {
-            'name' => 'Testing',
-            'elapse_ms' => '0.019',
-            'started_at' => [
-                              1469788986,
-                              937403
-                            ],
-            'level' => 0
-          },
-          {
-            'started_at' => [
-                              1469788986,
-                              937413
-                            ],
-            'level' => 1,
-            'elapse_ms' => '0.031',
-            'name' => 'Testing'
-          }
-        ];
+```javascript
+[{"level":2,"elapse_ms":0.01,"name":"test 3","started_at":[1469795734,394348]},{"level":1,"elapse_ms":0.048,"name":"test 2","started_at":[1469795734,394341]},{"level":0,"elapse_ms":0.074,"started_at":[1469795734,394328],"name":"test 1"},{"level":2,"elapse_ms":0.029,"started_at":[1469795734,394384],"name":"test 4"}]
 ```
 ## TODO :
-1. Output to json
-2. Create graphviz based visualizer
-3. Create easier to use class wrapper (interface)
+1. Output to json - Done
+2. Create visualizer
+3. Create easier to use class wrapper (interface) - Done
