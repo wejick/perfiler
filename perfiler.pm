@@ -25,8 +25,9 @@ DESTROY {
 	my $elapse_ms = tv_interval($self->{timer})*1000;
 	my %data = (
 		name => $self->{name},
-		elapse_ms => $self->{level},
-		started_at => $self->{timer}
+		elapse_ms => $elapse_ms,
+		started_at => $self->{timer},
+		level => $self->{level}, 
 		);
 	
 	my $pos = scalar @{$self->{handler}->{data}};
