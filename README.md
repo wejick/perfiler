@@ -39,8 +39,7 @@ sub main {
 ```
 output :
 ```javascript
-[{"level":2,"elapse_ms":0.01,"name":"test 3","started_at":[1469795734,394348]},{"level":1,"elapse_ms":0.048,"name":"test 2","started_at":[1469795734,394341]},{"level":0,"elapse_ms":0.074,"started_at":[1469795734,394328],"name":"test 1"},{"level":2,"elapse_ms":0.029,"started_at":[1469795734,394384],"name":"test 4"}]
-```
+[{"name":"test 3","level":2,"started_at":[1469812392,528541],"elapse_ms":0.008},{"elapse_ms":0.005,"level":2,"started_at":[1469812392,528573],"name":"test 4"},{"name":"test 5","level":2,"started_at":[1469812392,528592],"elapse_ms":0.005},{"level":1,"started_at":[1469812392,528534],"elapse_ms":0.073,"name":"test 2"},{"name":"test 1","started_at":[1469812392,528522],"level":0,"elapse_ms":0.094}]```
 ## TODO :
 1. Output to json - Done
 2. Create visualizer
