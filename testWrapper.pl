@@ -29,7 +29,8 @@ sub test {
 sub main {
 	test;
 
-	print $profiler->get_json;
+	#print $profiler->get_json;
+	print $profiler->get_svg;
 }
 
 &main;
