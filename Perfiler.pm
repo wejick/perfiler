@@ -29,7 +29,11 @@ sub start_scope {
 sub get_json {
 	my $self = shift;
 
-	return encode_json($self->{handler}->{data});
+	return encode_json([reverse @{$self->{handler}->{data}}]);
+}
+
+sub get_svg {
+	
 }
 
 1;
