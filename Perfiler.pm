@@ -19,7 +19,7 @@ sub svg_bar {
 
 	my $x = $SCALE_X * $x1;
 	my $y = $SCALE_Y * ($y);
-	my $width = $SCALE_X * (($x2) - ($x1));
+	my $width = $SCALE_X * (($x2));
 	my $height = $SCALE_Y - 1.0;
 
 	my $text = "<rect class='$svg_class' x='$x' y='$y' width='$width' height='$height' />\n";
@@ -47,6 +47,8 @@ sub svg_text {
 
 sub svg_header {
 	my ($x,$y) = @_;
+	$x = $SCALE_X * $x;
+	$y = $SCALE_Y * $y;
 	my $header = <<INSERT_STRING;
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -86,8 +88,8 @@ sub svg_box {
 
     my ($svg_class, $x1, $x2, $y1, $y2, $text);
     $y1 = 0;
-    $y2 = $SCALE_Y * $height;
-    for ($i = (($begin / 100000)) * 1000000; $i <= $end; $i+=100000) {
+    $y2 = $height;
+    for ($i = (($begin / 100000)) * 1000000; $i <= $end+(100000*10); $i+=100000) {
     	$x1 = $SCALE_X * $i;
     	$x2 = $SCALE_X * $i;
 		if ($i % 5000000 == 0) {
@@ -139,26 +141,25 @@ sub get_json {
 sub get_svg {
 	my $self = shift;
 	
-	
 	my @result = reverse @{$self->{handler}->{data}};	
 	my %common_data = ('total_time'=>$result[0]->{elapse_ms}, 'total_scope'=>scalar @result);
 	
 	my $svg;
-	my $header = svg_header($common_data{total_time},$common_data{total_scope}+10);
+	my $header = svg_header($common_data{total_time}*1000,$common_data{total_scope}+10);
 	my $footer = svg_footer;
 	
 	$svg = $header;
 	$svg .= svg_text(5*10000,1,"Perfiler Result :",'left');
 	$svg .= svg_text(5*10000,2,"Elapse time is $common_data{total_time} ms with $common_data{total_scope} scope measured",'left');
 	$svg .= " <g transform='translate(20.000,80)'> \n";
-	$svg .= svg_box($common_data{total_scope},0,$common_data{total_time}*10000);
+	$svg .= svg_box($common_data{total_scope},0,$common_data{total_time}*1000);
 	
 	my $y = 0;
 	foreach my $item (@result){
-		my $x_offset = tv_interval(($result[0]->{started_at}),$item->{started_at});
+		my $x_offset = tv_interval(($result[0]->{started_at}),$item->{started_at}) * 1000000;
 
-		$svg .= svg_bar("function",$x_offset*100000,$item->{elapse_ms}*1000,$y);
-		$svg .= svg_text($item->{elapse_ms}*1000,$y,"$x_offset $item->{name}");
+		$svg .= svg_bar("function",$x_offset,$item->{elapse_ms}*1000,$y);
+		$svg .= svg_text($x_offset,$y,"$item->{elapse_ms} ms $item->{name}",$x_offset < 50 ? 100:$x_offset);
 		$y++;
 	}
 	
