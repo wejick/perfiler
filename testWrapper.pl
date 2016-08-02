@@ -3,8 +3,9 @@ package main;
 
 use Perfiler;
 use strict;
+use Data::Dumper;
 
-	my $profiler = new Perfiler;
+my $profiler = new Perfiler;
 	
 sub test {
 	my $me = $profiler->start_scope("test 1");
@@ -13,10 +14,12 @@ sub test {
 		{
 			my $bro = $profiler->start_scope("test 3");
 			my $a = 'a';
+			sleep 2;
 		}
 		{
 			my $store = $profiler->start_scope("test 4");
 			my $a = 'a';
+			sleep 1;
 		}
 		{
 			my $store = $profiler->start_scope("test 5");
@@ -30,7 +33,8 @@ sub main {
 	test;
 
 	#print $profiler->get_json;
-	print $profiler->get_svg;
+	my $test = $profiler->get_svg;
+	print $test;
 }
 
 &main;

@@ -4,6 +4,7 @@ package Perfiler;
 use strict;
 use PerfilerCore;
 use JSON;
+use Time::HiRes qw(tv_interval );
 
 my %perfilerHandler = (
 	level => 0,
@@ -27,8 +28,16 @@ sub svg_bar {
 }
 
 sub svg_text {
-	my ($x, $y, $format) = @_;
-	my $svg_class = "right";
+	my ($x, $y, $format, $text_class) = @_;
+	
+	my $svg_class;
+	
+	if ($text_class) {
+		$svg_class = $text_class;
+	}	else {
+		$svg_class = 'right';	
+	}
+			
 	my $x = $SCALE_X * ($x) + 5.0;
 	my $y = $SCALE_Y * ($y) + 14.0;
 	
@@ -37,10 +46,11 @@ sub svg_text {
 }
 
 sub svg_header {
+	my ($x,$y) = @_;
 	my $header = <<INSERT_STRING;
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="854px" height="603px" version="1.1" xmlns="http://www.w3.org/2000/svg">	<!-- This file is a perfiler SVG file. It is best rendered in a browser  -->
+<svg width="$x px" height="$y px" version="1.1" xmlns="http://www.w3.org/2000/svg">	<!-- This file is a perfiler SVG file. It is best rendered in a browser  -->
 
 	<defs>
   	<style type="text/css">
@@ -127,15 +137,31 @@ sub get_json {
 }
 
 sub get_svg {
+	my $self = shift;
+	
+	
+	my @result = reverse @{$self->{handler}->{data}};	
+	my %common_data = ('total_time'=>$result[0]->{elapse_ms}, 'total_scope'=>scalar @result);
+	
 	my $svg;
-	my $header = svg_header;
+	my $header = svg_header($common_data{total_time},$common_data{total_scope}+10);
 	my $footer = svg_footer;
-
+	
 	$svg = $header;
-	$svg .= " <g transform='translate(20.000,100)'> \n";
-	$svg .= svg_box(100,0,500*10000);
-	$svg .= svg_bar("function",0,5*10000,0);
-	$svg .= svg_text(5*10000,0,"jalan");
+	$svg .= svg_text(5*10000,1,"Perfiler Result :",'left');
+	$svg .= svg_text(5*10000,2,"Elapse time is $common_data{total_time} ms with $common_data{total_scope} scope measured",'left');
+	$svg .= " <g transform='translate(20.000,80)'> \n";
+	$svg .= svg_box($common_data{total_scope},0,$common_data{total_time}*10000);
+	
+	my $y = 0;
+	foreach my $item (@result){
+		my $x_offset = tv_interval(($result[0]->{started_at}),$item->{started_at});
+
+		$svg .= svg_bar("function",$x_offset*100000,$item->{elapse_ms}*1000,$y);
+		$svg .= svg_text($item->{elapse_ms}*1000,$y,"$x_offset $item->{name}");
+		$y++;
+	}
+	
 	$svg .= " </g>\n";
 	$svg .= $footer;
 

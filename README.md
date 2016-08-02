@@ -3,6 +3,9 @@
 
 Package to do profiling in perl, it takes how long a scope takes time to execute.
 
+##Requirement
+This module needs JSON , which is not part of standard perl distribution however already commonly used.
+
 ## How To use (This is from test.pl)
 ```perl
 #create the profiler instance here
