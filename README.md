@@ -49,8 +49,8 @@ Perfiler could generate two kind of output, json and svg graph, use `get_json` a
 [{"name":"test 3","level":2,"started_at":[1469812392,528541],"elapse_ms":0.008},{"elapse_ms":0.005,"level":2,"started_at":[1469812392,528573],"name":"test 4"},{"name":"test 5","level":2,"started_at":[1469812392,528592],"elapse_ms":0.005},{"level":1,"started_at":[1469812392,528534],"elapse_ms":0.073,"name":"test 2"},{"name":"test 1","started_at":[1469812392,528522],"level":0,"elapse_ms":0.094}]
 ```
 Here is the sample of svg output from testSVG.pl
-![sample screenshot]
-(https://github.com/wejick/perfiler/raw/master/svgoutput.png)
+
+![sample screenshot](https://github.com/wejick/perfiler/raw/master/svgoutput.png)
 
 ## TODO :
 1. Output to json - Done
